@@ -71,10 +71,16 @@ for j=1:size(data,3)
             end
         end
     end
-     
+    
+    AP_times_number
+    if AP_times_number == 0
+        return
+    end
+    
     AP_sizes=AP_sizes(1:AP_times_number); 
     AP_sizes_without_first=AP_sizes(2:AP_times_number);
     AP_mins=AP_mins(1:(AP_times_number-1)); %cutting the list of AP mins to get rid of extra zeros.AP_times_number-1 because the minimum after the last action potential is no in a current step anymore
+    
     AP_actual_sizes_list=AP_sizes_without_first-AP_mins; %the list of actualAP sizes. baseline min precedes it action potential
     AP_actual_sizes_average=(sum(AP_actual_sizes_list))/(AP_times_number-1); %AP average size for a sweep
     AP_actual_sizes_averages_list(j)=AP_actual_sizes_average;
