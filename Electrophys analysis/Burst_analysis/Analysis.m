@@ -1,4 +1,4 @@
-function [ISI_values,AP_sizes,AP_number]=Analysis(data,sweep,k,k_total,filter)
+function [ISI_values, AP_sizes, AP_number] = Analysis(data, sweep, k, k_total, filter, filename)
 
 if nargin < 5
     filter = 10000;
@@ -57,6 +57,17 @@ ISI_number=AP_number-1;
 ISI_values=ISI(2:AP_number)/filter;
 AP_sizes=AP_sizes(1:AP_times_number);
 
+title_pos = strcat(ExcelCol(k), '1');
+freq_pos = strcat(ExcelCol(k), '2');
+data_pos = strcat(ExcelCol(k), '4');
+
+excel_name = 'firing_frequency_list.xlsx';
+xlswrite(excel_name, {filename}, 1, title_pos{1});
+xlswrite(excel_name, frequency, 1, freq_pos{1});
+xlswrite(excel_name, ISI_values, 1, data_pos{1});
+
+
+
 
 figure(2);
 hold on
@@ -73,9 +84,12 @@ xlabel('10\^');
 ylabel('Number of Occurences');
 
 buckets = 250;
-lags=25000;
+lags = 25000;
 bucketsize = lags / buckets;
 
+if length(sweep_data) >= lags
+    lags = length(sweep_data) - 1;
+end
 
 a = autocorr(sweep_data, lags);
 b = zeros(buckets,1);

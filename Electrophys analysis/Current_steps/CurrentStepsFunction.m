@@ -20,14 +20,13 @@ for j=1:size(data,3)
     xlabel('Time (sec)');
     ylabel('Voltage (mV)');
 end
-  
- thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
- 
- frequency_list=zeros(size(data,3),1);
- ISI_values_list=zeros(1000,size(data,3));
- AP_sizes_list=zeros(1000,size(data,3));
- AP_actual_sizes_table=zeros(1000,size(data,3));
- 
+
+thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
+
+frequency_list=zeros(size(data,3),1);
+ISI_values_list=zeros(1000,size(data,3));
+AP_sizes_list=zeros(1000,size(data,3));
+AP_actual_sizes_table=zeros(1000,size(data,3));
 
 for j=1:size(data,3)
     AP_number = 0;
@@ -41,7 +40,8 @@ for j=1:size(data,3)
     AP_min_recorded=1;
     sweep_data=data(1:size(data,1),1,j);
     fire = 0;
-       
+
+    
     for i = duration
         if sweep_data(i) > thresh_AP 
             if fire==0
@@ -72,9 +72,8 @@ for j=1:size(data,3)
         end
     end
     
-    AP_times_number
     if AP_times_number == 0
-        return
+        continue
     end
     
     AP_sizes=AP_sizes(1:AP_times_number); 
@@ -138,15 +137,16 @@ for j=1:size(data,3)
     end
     xlabel('#AP in a sweep');
     ylabel('Normalised (actual)');
-       
- end
+end
+
+
 ISI_values_list_filtered=ISI_values_list;
 ISI_values_list_filtered(ISI_values_list_filtered==0)=nan;
 
 AP_actual_sizes_averages_table_filtered=AP_actual_sizes_averages_table;
-AP_actual_sizes_averages_table(AP_Actual_sizes_averages_table==0)=nan;
+AP_actual_sizes_averages_table_filtered(AP_actual_sizes_averages_table_filtered==0)=nan;
 
-ISI_average_list=ISI_average_list(1:(sweeps));
+ISI_average_list=ISI_average_list(1:sweeps);
 
 
 
@@ -156,7 +156,6 @@ current_injection=-50:50:700;
 scatter((current_injection),frequency_list./10);
 xlabel('Injected current (pA)');
 ylabel('Frequency (Hz)');
-
 
 figure(8 + figure_number * 10);
 set(8 + figure_number * 10, 'Name', filename);
@@ -179,48 +178,50 @@ xlabel('Injected current (pA)');
 ylabel('Actual action potential size (mV)');
 
 warning('off', 'MATLAB:xlswrite:AddSheet');
-title_pos = strcat(ExcelCol(figure_number + 1), '1');
-data_pos = strcat(ExcelCol(figure_number + 1), '2');
+title_pos = strcat(ExcelCol(figure_number), '1');
+data_pos = strcat(ExcelCol(figure_number), '2');
 
 excel_name = 'frequency_list.xlsx';
 xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, frequency_list, 1, data_pos{1});
 
 excel_name = 'isi_values_list_filtered.xlsx';
-xlswrite(excel_name, ISI_values_list_filtered, figure_number + 1);
-
-excel_name = 'AP_actual_sizes_averages_table_filtered.xlsx';
-xlswrite(excel_name, AP_actual_sizes_averages_table_filtered, figure_number + 1);
-
-excel_name = 'AP_actual_sizes_table';
-xlswrite(excel_name, AP_actual_sizes_table, figure_number + 1);
-
-excel_name='AP_actual_sizes_averages_list';
-xlswrite(excel_name,{filename}, 1, title_pos{1});
-xlswrite(excel_name, AP_actual_sizes_averages_list, 1, data_pos{1});
-
-
-excel_name='ISI_average_list';
-xlswrite(excel_name,{filename}, 1, title_pos{1});
-xlswrite(excel_name, ISI_average_list, 1, data_pos{1});
+xlswrite(excel_name, ISI_values_list_filtered, figure_number);
 
 e = actxserver('Excel.Application'); 
 ewb = e.Workbooks.Open(fullfile(pwd, excel_name)); 
-ewb.Worksheets.Item(figure_number + 1).Name = filename; 
+ewb.Worksheets.Item(figure_number).Name = filename; 
 ewb.Save;
 ewb.Close(false);
 e.Quit;
 
 
+excel_name = 'AP_actual_sizes_averages_table_filtered.xlsx';
+xlswrite(excel_name, AP_actual_sizes_averages_table_filtered, figure_number);
+
+e = actxserver('Excel.Application'); 
+ewb = e.Workbooks.Open(fullfile(pwd, excel_name)); 
+ewb.Worksheets.Item(figure_number).Name = filename; 
+ewb.Save;
+ewb.Close(false);
+e.Quit;
 
 
+excel_name = 'AP_actual_sizes_table.xlsx';
+xlswrite(excel_name, AP_actual_sizes_table, figure_number);
+
+e = actxserver('Excel.Application'); 
+ewb = e.Workbooks.Open(fullfile(pwd, excel_name)); 
+ewb.Worksheets.Item(figure_number).Name = filename; 
+ewb.Save;
+ewb.Close(false);
+e.Quit;
 
 
+excel_name='AP_actual_sizes_averages_list.xlsx';
+xlswrite(excel_name,{filename}, 1, title_pos{1});
+xlswrite(excel_name, AP_actual_sizes_averages_list, 1, data_pos{1});
 
-
-
-
-
-
-
-
+excel_name='ISI_average_list.xlsx';
+xlswrite(excel_name,{filename}, 1, title_pos{1});
+xlswrite(excel_name, ISI_average_list, 1, data_pos{1});
