@@ -2,9 +2,7 @@ close all;
 
 [filenames, path] = uigetfile({'*.abf'}, 'Select_file(s)', 'MultiSelect', 'on');
 
-if filenames == 0
-    return
-elseif ~iscell(filenames)
+if ~iscell(filenames)
     filenames = {filenames};
 end
 
@@ -24,16 +22,13 @@ for i = 1:number_of_files
     sq = ceil(sqrt(sweeps));
 
     figure(99);
-    for j = 1:sweeps
+    for j = 1:sweep
         subplot(sq, sq, j);
         plot(data(1:duration, 1, j));
         title(sprintf('Sweep %d', j));
     end
 
-    filter = input(sprintf(
-        'Analysing %s. What is filter frequency? Leave blank for default (10000) or -1 to skip. ',
-        name{1}
-    ));
+    filter = input(sprintf('Analysing %s. What is filter frequency? Leave blank for default (10000) or -1 to skip. ', name{1}));
     if (isempty(filter)) 
         filter = 10000;
     end
@@ -44,16 +39,20 @@ for i = 1:number_of_files
     end
     
     total_length = floor(duration * sweeps / filter);
-    startts = input(sprintf('When should we start (in seconds, 0 to %d)? ', total_length));
-    endts = input(sprintf('When should we finish (in seconds, 0 to %d)? ', total_length));
-    data = reshape(data, duration * sweeps, 1);
+    startts = input(sprintf('When should we start (in seconds, 0 to %d, blank for 0)? ', total_length));
+    if isempty(startts) || startts < 0 || startts > total_length
+        startts = 0;
+    end
     
-
-
+    endts = input(sprintf('When should we finish (in seconds, 0 to %d, blank for max)? ', total_length));
+    if isempty(endts) || endts < 0 || endts > total_length
+        endts = total_length;
+    end
+    
+    data = reshape(data, duration * sweeps, 1);
     close 99;
 
-
-    Analysis(data(starts * filter:endts * filter), 1, i, number_of_files, filter, name{1});
+    Analysis(data((startts * filter + 1):(endts * filter)), 1, i, number_of_files, filter, name{1});
 end
 
 

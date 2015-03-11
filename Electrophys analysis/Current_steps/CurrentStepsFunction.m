@@ -21,7 +21,7 @@ for j=1:size(data,3)
     ylabel('Voltage (mV)');
 end
 
-thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
+thresh_AP = -15; %what threshold voltage needs to pass to be considered as firing an AP
 
 frequency_list=zeros(size(data,3),1);
 ISI_values_list=zeros(1000,size(data,3));
@@ -72,7 +72,7 @@ for j=1:size(data,3)
         end
     end
     
-    if AP_times_number == 0
+    if AP_times_number <= 1
         continue
     end
     
@@ -91,8 +91,8 @@ for j=1:size(data,3)
     ISI_values_list(1:(AP_number-1),j)=ISI_values;
     ISI_average=(sum(ISI_values))/ISI_number;
     ISI_average_list(j)=ISI_average;
-    AP_sizes_list(1:AP_number,j)=AP_sizes;
-    AP_actual_sizes_table(1:(AP_number-1),j)=AP_actual_sizes_list;
+    AP_sizes_list(1:AP_times_number,j)=AP_sizes;
+    AP_actual_sizes_table(1:(AP_times_number-1),j)=AP_actual_sizes_list;
     AP_average=(sum(AP_sizes))/AP_times_number;
     AP_average_list(j)=AP_average;
     
@@ -116,7 +116,7 @@ for j=1:size(data,3)
     subplot(k_rows,k_rows,j);
     if AP_number > 0 
         plot ((AP_sizes./AP_sizes(1)));
-        AP_actual_sizes_averages_table(1:AP_number,j)=AP_sizes./AP_sizes(1);
+        AP_actual_sizes_averages_table(1:AP_times_number,j)=AP_sizes./AP_sizes(1);
     end
     xlabel('#AP in a sweep');
     ylabel('Normalized peaks');

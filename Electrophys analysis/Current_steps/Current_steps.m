@@ -6,8 +6,8 @@ if iscell(filenames)
     for i = 1:number_of_files
         fullname = strcat(path, filenames(i));
         data = abfload(fullname{1});
-        title = filenames(i);
-        CurrentStepsFunction(data, i - 1, title{1});
+        name = filenames(i);
+        CurrentStepsFunction(data, i - 1, name{1});
     end
 elseif filenames == 0    
     % Don't do anything

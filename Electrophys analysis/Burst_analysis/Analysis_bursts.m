@@ -1,5 +1,5 @@
 close all
-data = abfload('D:\Clouds\One Drive\Electrophysiology\2014\2014\10 2014\31 10\14o31041.abf');
+data = abfload('D:\Clouds\One Drive\Electrophysiology\2014\2014\11 2014\14 11\14n14016.abf');
 
 duration = size(data, 1); %duration is how long the recording was done for.recorded every 100us. tenths of ms. by selecting datasize (1) i select how many points i have which is 1000000. as our filter is set at 10 kHz. 
 sweeps = size(data, 3);
@@ -93,5 +93,6 @@ hist(interburst_gaps,10);
 xlabel('Interburst gap duration (sec)');
 ylabel('Frequency');
 title('Interburst histogram');
+
    
 
