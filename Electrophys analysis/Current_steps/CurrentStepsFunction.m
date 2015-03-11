@@ -178,41 +178,41 @@ xlabel('Injected current (pA)');
 ylabel('Actual action potential size (mV)');
 
 warning('off', 'MATLAB:xlswrite:AddSheet');
-title_pos = strcat(ExcelCol(figure_number), '1');
-data_pos = strcat(ExcelCol(figure_number), '2');
+title_pos = strcat(ExcelCol(figure_number+1 ), '1');
+data_pos = strcat(ExcelCol(figure_number+1), '2');
 
 excel_name = 'frequency_list.xlsx';
 xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, frequency_list, 1, data_pos{1});
 
 excel_name = 'isi_values_list_filtered.xlsx';
-xlswrite(excel_name, ISI_values_list_filtered, figure_number);
+xlswrite(excel_name, ISI_values_list_filtered, figure_number+1);
 
 e = actxserver('Excel.Application'); 
 ewb = e.Workbooks.Open(fullfile(pwd, excel_name)); 
-ewb.Worksheets.Item(figure_number).Name = filename; 
+ewb.Worksheets.Item(figure_number+1).Name = filename; 
 ewb.Save;
 ewb.Close(false);
 e.Quit;
 
 
 excel_name = 'AP_actual_sizes_averages_table_filtered.xlsx';
-xlswrite(excel_name, AP_actual_sizes_averages_table_filtered, figure_number);
+xlswrite(excel_name, AP_actual_sizes_averages_table_filtered, figure_number+1);
 
 e = actxserver('Excel.Application'); 
 ewb = e.Workbooks.Open(fullfile(pwd, excel_name)); 
-ewb.Worksheets.Item(figure_number).Name = filename; 
+ewb.Worksheets.Item(figure_number+1).Name = filename; 
 ewb.Save;
 ewb.Close(false);
 e.Quit;
 
 
 excel_name = 'AP_actual_sizes_table.xlsx';
-xlswrite(excel_name, AP_actual_sizes_table, figure_number);
+xlswrite(excel_name, AP_actual_sizes_table, figure_number+1);
 
 e = actxserver('Excel.Application'); 
 ewb = e.Workbooks.Open(fullfile(pwd, excel_name)); 
-ewb.Worksheets.Item(figure_number).Name = filename; 
+ewb.Worksheets.Item(figure_number+1).Name = filename; 
 ewb.Save;
 ewb.Close(false);
 e.Quit;
