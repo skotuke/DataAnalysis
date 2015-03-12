@@ -10,12 +10,19 @@ end
    
 
 k_rows = ceil(sqrt(k_total));
+k_spot = k;
+k_figure = 0;
+while k_spot > k_rows * k_rows
+    k_spot = k_spot - k_rows * k_rows;
+    k_figure = k_figure + 10;
+end
+
 duration = size(data, 1);
 duration_s = (1/filter):(1/filter):(duration/filter);%zero does not exist in matlab, therefore it starts at the smallest point.
 sweep_data = data(1:duration, 1, sweep);
 
-figure(1);
-subplot(k_rows, k_rows, k);
+figure(1 + k_figure);
+subplot(k_rows, k_rows, k_spot);
 plot(duration_s, sweep_data);
 xlabel('Time (sec)');
 ylabel('Voltage(mV)');
@@ -87,8 +94,8 @@ for j = 1:length(ISI_values)
 end 
 xlabel('Time (sec)'); ylabel('Trial no');  
   
-figure(3);
-subplot(k_rows, k_rows, k);
+figure(3 + k_figure);
+subplot(k_rows, k_rows, k_spot);
 lnISI = log10(ISI_values);
 hist(lnISI, 50);
 xlabel('10\^');
@@ -108,7 +115,7 @@ b = zeros(buckets,1);
 for i = 0:(buckets-1)
     b(i+1) = mean(a((i*bucketsize+1):((i+1)*bucketsize),1));
 end
-figure(4);
-subplot(k_rows,k_rows,k);
+figure(4 + k_figure);
+subplot(k_rows,k_rows,k_spot);
 bar(b);
 end
