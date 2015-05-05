@@ -1,4 +1,8 @@
 close all
+
+path = fileparts(mfilename('fullpath'));
+addpath(sprintf('%s/Includes', path));
+
 data = abfload('D:\Clouds\One Drive\Electrophysiology\2014\2014\10 2014\31 10\14o31041.abf');
 
 duration = size(data, 1); %duration is how long the recording was done for.recorded every 100us. tenths of ms. by selecting datasize (1) i select how many points i have which is 1000000. as our filter is set at 10 kHz. 10000 measurements per second=100us

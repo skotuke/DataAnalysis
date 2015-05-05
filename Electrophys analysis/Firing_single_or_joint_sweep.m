@@ -2,6 +2,9 @@ close all;
 
 [filenames, path] = uigetfile({'*.abf'}, 'Select_file(s)', 'MultiSelect', 'on');
 
+path = fileparts(mfilename('fullpath'));
+addpath(sprintf('%s/Includes', path));
+
 if ~iscell(filenames)
     filenames = {filenames};
 end

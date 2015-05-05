@@ -1,4 +1,8 @@
 close all
+
+path = fileparts(mfilename('fullpath'));
+addpath(sprintf('%s/Includes', path));
+
 data = abfload('D:\Clouds\One Drive\Electrophysiology\2014\2014\11 2014\14 11\14n14016.abf');
 
 duration = size(data, 1); %duration is how long the recording was done for.recorded every 100us. tenths of ms. by selecting datasize (1) i select how many points i have which is 1000000. as our filter is set at 10 kHz. 
@@ -6,11 +10,11 @@ sweeps = size(data, 3);
 sweep = input(sprintf('Which sweep do you want to analyse (1 to %d, or 0 for all)? ', sweeps));
 if sweep==0
     sweep=1;
-    data=reshape(data, duration*sweeps,1);
+    data=reshape(data, duration*sweeps, 1);
     duration=duration*sweeps;
 end
 
-[ISI_values,AP_sizes,AP_number]=Analysis(data,sweep,1,1);
+[ISI_values,AP_sizes,AP_number]=Analysis(data,sweep,1,1,10000,'Data file','Burst_analysis');
 
  
 ISI_thresh = input('What determines interburst period? ');
