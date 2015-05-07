@@ -2,6 +2,7 @@
 close all
 
 path = fileparts(mfilename('fullpath'));
+delete(sprintf('%s/Output/Burst_analysis/*.xlsx', path));
 addpath(sprintf('%s/Includes', path));
 
 [filenames, path] = uigetfile({'*.abf'}, 'Select file(s)', 'MultiSelect', 'on');

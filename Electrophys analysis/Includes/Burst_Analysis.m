@@ -129,13 +129,13 @@ xlswrite(excel_name, perc_firing*100, m, 'G4');
 path = fileparts(mfilename('fullpath'));
 excel_name = sprintf('%s\\..\\Output\\%s\\APs_in_bursts.xlsx', path, output_folder);
 xlswrite(excel_name, {filename}, m, 'A1');
-xlswrite(excel_name, 'Burst No', m, 'A2');
+xlswrite(excel_name, {'Burst No'}, m, 'A2');
 xlswrite(excel_name, transpose(true_burst_number_ID), m, 'B2');
 xlswrite(excel_name,burst_AP_sizes_filtered , m, 'B3');
 
 path = fileparts(mfilename('fullpath'));
 excel_name = sprintf('%s\\..\\Output\\%s\\APs_in_bursts_normalized.xlsx', path, output_folder);xlswrite(excel_name, {filename}, m, 'A1');
-xlswrite(excel_name, 'Burst No', m, 'A2');
+xlswrite(excel_name, {'Burst No'}, m, 'A2');
 xlswrite(excel_name, transpose(true_burst_number_ID), m, 'B2');
 xlswrite(excel_name,burst_AP_sizes_normalised_filtered , m, 'B3');
 
