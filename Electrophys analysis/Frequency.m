@@ -1,24 +1,25 @@
 close all;
 
-[filenames, path] = uigetfile({'*.abf'}, 'Select_file(s)', 'MultiSelect', 'on');
-
-path = fileparts(mfilename('fullpath'));
+path = fileparts(mfilename('fullpath')); %mfilename takes the whole path, fileparts splits the name (firing single or joint) from the rest of the path
 addpath(sprintf('%s/Includes', path));
 
-if ~iscell(filenames)
-    filenames = {filenames};
+[filenames, path] = uigetfile({'*.abf'}, 'Select file(s)', 'MultiSelect', 'on'); %filenames is a list of filenames I selected in the dialog box
+
+
+if ~iscell(filenames) %if filenames is not an array
+    filenames = {filenames};%make it into one element array. we want it in am array because you cannot have text inthe matrix
 end
 
-number_of_files = length(filenames);
+number_of_files = length(filenames); %length is a function getting a number 
 m = 1;
 
 for i = 1:number_of_files
-    fullname = strcat(path, filenames(i));
+    fullname = strcat(path, filenames(i));%strcat concatinatina
     data = abfload(fullname{1});
     name = filenames(i);
 
     if isempty(data)
-        continue
+        continue %reiskia skippinti viska after this and get to the next, if there is sth wrong with data
     end
 
     % Preview file
@@ -53,7 +54,7 @@ for i = 1:number_of_files
     end
 
     for part=1:parts
-        startts = input(sprintf('Part [%d]. When should we start (in seconds, 0 to %d, blank for 0)? ', part, total_length));
+        startts = input(sprintf('Part [%d]. When should we start (in seconds, 0 to %d, blank for 0)? ', part, total_length));%strtts- strt time stamp in seconds
         if isempty(startts) || startts < 0 || startts > total_length
             startts = 0;
         end
@@ -64,7 +65,7 @@ for i = 1:number_of_files
         end
 
         fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-        Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname);
+        Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency');
         m = m + 1;
     end
     

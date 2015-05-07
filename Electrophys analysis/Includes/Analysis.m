@@ -39,7 +39,7 @@ end
 k_rows = ceil(sqrt(k_total)); %apvalinti i virsu
 k_spot = k; %kelintas grafikelis is grafiku grid
 k_figure = 0; %numeris kelintas 
-while k_spot > k_rows * k_rows %jeigu jau nebetelpa,pradeti numeruoti is naujo
+while k_spot > k_rows * k_rows %jeigu jau nebetelpa,pradeti numeruoti is naujo. I need this as sometimes I make a limit of 
     k_spot = k_spot - k_rows * k_rows;
     k_figure = k_figure + 10;
 end
@@ -56,7 +56,7 @@ xlabel('Time (sec)');
 ylabel('Voltage(mV)');
  
 thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
-thresh_gap = filter / 200; %adjust this if you think that not everything is getting picked up
+thresh_gap = filter / 10000; %adjust this if you think that not everything is getting picked up or too much is getting picked up
 
 AP_times = zeros(10000, 1);
 AP_times_shifted = zeros(10000, 1);
@@ -100,7 +100,8 @@ freq_pos = strcat(ExcelCol(k), '2');
 mean_pos = strcat(ExcelCol(k), '3');
 data_pos = strcat(ExcelCol(k), '5');
 
-excel_name = sprintf('Output/%s/firing_frequency_list.xlsx', output_folder); %it tells the full path of the file
+path = fileparts(mfilename('fullpath'));
+excel_name = sprintf('%s\\..\\Output\\%s\\firing_frequency_list.xlsx', path, output_folder) %it tells the full path of the file
 xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, frequency, 1, freq_pos{1});
 xlswrite(excel_name, mean(ISI_values), 1, mean_pos{1});
