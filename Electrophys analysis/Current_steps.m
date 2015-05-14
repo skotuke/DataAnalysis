@@ -1,5 +1,6 @@
 close all
 
+show_figures = 0;
 path = fileparts(mfilename('fullpath'));
 delete(sprintf('%s/Output/Current_steps/*.xlsx', path));
 addpath(sprintf('%s/Includes', path));
@@ -14,16 +15,15 @@ number_of_files = length(filenames); %length is a function getting a number
 m = 1;
 
 for i = 1:number_of_files
-        fullname = strcat(path, filenames(i));
-        data = abfload(fullname{1});
-        name = filenames(i);
-   
+    fullname = strcat(path, filenames(i));
+    data = abfload(fullname{1});
+    name = filenames(i);
+
     if isempty(data)
         continue
     end
     
-      CurrentStepsFunction(data, fullname, 'Current_Steps',m);
-      m=m+1;
-      
+    CurrentStepsFunction(data, name{1}, 'Current_Steps', m, show_figures);
+    m = m + 1;
 end
 
