@@ -1,4 +1,4 @@
-function [ISI_values, AP_sizes, AP_times_number] = Analysis(data, sweep, k, k_total, filter, filename, output_folder) 
+function [ISI_values, AP_sizes, AP_times_number] = Analysis(data, sweep, k, k_total, filter, filename, output_folder, location, name) 
 % Function Analysis
 
 % after '=' is the name of the funtion and in brackets there is a list of
@@ -103,7 +103,7 @@ mean_pos = strcat(ExcelCol(k), '3');
 data_pos = strcat(ExcelCol(k), '5');
 
 path = fileparts(mfilename('fullpath'));
-excel_name = sprintf('%s\\..\\Output\\%s\\firing_frequency_list.xlsx', path, output_folder) %it tells the full path of the file
+excel_name = sprintf('%s\\Frequency_%s.xlsx', location, name) %it tells the full path of the file
 xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, frequency, 1, freq_pos{1});
 xlswrite(excel_name, mean(ISI_values), 1, mean_pos{1});

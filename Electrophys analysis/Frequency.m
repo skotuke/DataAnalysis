@@ -66,7 +66,7 @@ for i = 1:number_of_files
         end
 
         fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-        Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency');
+        Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1});
         m = m + 1;
     end
     
