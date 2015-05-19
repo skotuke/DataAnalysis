@@ -1,4 +1,4 @@
-function [AP_sizes_list, AP_actual_sizes_table]=CurrentStepsFunction(data, filename, output_folder, m, show_figures)
+function [AP_sizes_list, AP_mins]=CurrentStepsFunction(data, filename, output_folder, m, show_figures)
 
 if nargin < 5
     show_figures = 1;
@@ -97,12 +97,12 @@ for j=1:sweeps
     ISI_average=(sum(ISI_values))/ISI_number;
     ISI_average_list(j)=ISI_average;
     AP_sizes_list(1:AP_times_number,j)=AP_sizes;
-    AP_actual_sizes_table(1:(AP_times_number),j)=AP_actual_sizes;
-    AP_average=mean(AP_sizes);
+    AP_actual_sizes_table(1:(AP_times_number-1),j)=AP_actual_sizes;
+    AP_average=(sum(AP_sizes))/AP_times_number;
     AP_average_list(j)=AP_average;
 
     if AP_number > 0
-        AP_actual_sizes_averages_table(1:AP_times_number, j)=AP_actual_sizes./AP_actual_sizes(1); 
+        AP_actual_sizes_averages_table(1:AP_times_number, j)=AP_sizes./AP_sizes(1); 
     end
     
     if show_figures
@@ -156,9 +156,6 @@ AP_actual_sizes_averages_table_filtered(AP_actual_sizes_averages_table_filtered=
 
 AP_average_list=AP_average_list(1:(sweeps));
 AP_actual_sizes_averages_list=AP_actual_sizes_averages_list(1:(sweeps));
-
-AP_actual_sizes_table_filtered=AP_actual_sizes_table;
-AP_actual_sizes_table_filtered(AP_actual_sizes_table==0)=nan;
 
 if show_figures
     figure(7 + m * 10);
@@ -225,4 +222,4 @@ xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Actual AP'},m, 'A3');
 xlswrite(excel_name, transpose(step_number),m, 'B3');
 xlswrite(excel_name, {'Step'}, m, 'B2');
-xlswrite(excel_name, AP_actual_sizes_table_filtered, m, 'B4');
+xlswrite(excel_name, AP_actual_sizes_table, m, 'B4');

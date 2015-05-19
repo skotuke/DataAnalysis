@@ -23,7 +23,7 @@ for i = 1:number_of_files
         continue
     end
     
-    CurrentStepsFunction(data, name{1}, 'Current_Steps', m, show_figures);
+    [AP_sizes_list, AP_actual_sizes_table]=CurrentStepsFunction(data, name{1}, 'Current_Steps', m, show_figures);
     m = m + 1;
 end
 
