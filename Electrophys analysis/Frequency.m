@@ -31,7 +31,7 @@ for i = 1:number_of_files
     for j = 1:sweeps
         subplot(sq, sq, j);
         plot(data(1:duration, 1, j));
-        title(sprintf('Sweep %d', j));
+        title(filenames(i));
     end
     
     data = reshape(data, duration * sweeps, 1);

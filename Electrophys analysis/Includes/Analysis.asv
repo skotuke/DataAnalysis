@@ -89,12 +89,12 @@ for i = 1:duration
         end
     end
 end
-AP_times=AP_times(2:AP_times_number);
-AP_times_shifted=AP_times_shifted(2:AP_times_number);
+AP_times=AP_times(2:AP_times_number;
+AP_times_shifted=
 
 frequency = AP_times_number / (duration / filter);
 ISI = AP_times - AP_times_shifted;
-ISI_values = ISI / filter;
+ISI_values = ISI(2:AP_times_number) / filter;
 AP_sizes = AP_sizes(1:AP_times_number);
 
 title_pos = strcat(ExcelCol(k), '1');
