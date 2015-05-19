@@ -1,6 +1,7 @@
 close all;
 
 path = fileparts(mfilename('fullpath')); %mfilename takes the whole path, fileparts splits the name (firing single or joint) from the rest of the path
+delete(sprintf('%s/Output/Frequency/*.xlsx', path));
 addpath(sprintf('%s/Includes', path));
 
 [filenames, path] = uigetfile({'*.abf'}, 'Select file(s)', 'MultiSelect', 'on'); %filenames is a list of filenames I selected in the dialog box
