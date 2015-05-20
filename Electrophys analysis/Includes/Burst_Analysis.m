@@ -5,6 +5,7 @@ ISI_thresh=10^(ISI_thresh_log);
 burst_number=0;
 burst_gaps=zeros(1000,1);
 burst_gap_IDs=zeros(1000,1);
+average_intraburst_gap=zeros(1000,1);
 
 for j=1:length(ISI_values)
     if ISI_values(j)>ISI_thresh
@@ -45,13 +46,14 @@ for j=2:burst_number
         true_burst_number_ID(true_burst_number)=true_burst_number;
         burst_AP_counts(true_burst_number)=AP_count;
         burst_lengths(true_burst_number)=sum(ISI_values((burst_gap_IDs(j-1)+1):(burst_gap_IDs(j)-1)));
-        duty_cycles(true_burst_number)=ISI_values(burst_gap_IDs(j))+burst_lengths(true_burst_number);
-        true_burst_gap(true_burst_number)=ISI_values(burst_gap_IDs(j));
+        duty_cycles(true_burst_number)=ISI_values(burst_gap_IDs(j))+burst_lengths(true_burst_number);%sum of the burst and the gap following the burst
+        true_burst_gap(true_burst_number)=ISI_values(burst_gap_IDs(j));%gap after the burst in question
 
         intraburst_gaps(intraburst_number:(intraburst_number+AP_count-2)) = ISI_values((burst_gap_IDs(j-1)+1):(burst_gap_IDs(j)-1));
         intraburst_number = intraburst_number + AP_count-1;
+        average_intraburst_gap(true_burst_number)=mean(ISI_values((burst_gap_IDs(j-1)+1):(burst_gap_IDs(j)-1)));
         
-        burst_range = ((burst_gap_IDs(j-1)+1):burst_gap_IDs(j));
+        burst_range = ((burst_gap_IDs(j-1)+1):burst_gap_IDs(j));% numbers refering to ISI intervals belonging to that duty cycle
         sizes_range = burst_range - burst_gap_IDs(j-1);
         burst_AP_sizes(sizes_range, true_burst_number)=AP_sizes(burst_range);
         burst_AP_sizes_normalised(sizes_range, true_burst_number)=AP_sizes(burst_range)/AP_sizes(burst_gap_IDs(j-1)+1);
@@ -125,6 +127,9 @@ xlswrite(excel_name, duty_cycles, m, 'F4');
 xlswrite(excel_name, {'% Firing'}, m, 'G1');
 xlswrite(excel_name, {mean(perc_firing(1:true_burst_number))*100}, m, 'G2');
 xlswrite(excel_name, perc_firing*100, m, 'G4');
+xlswrite(excel_name, {'Intraburst gap'}, m, 'H1');
+xlswrite(excel_name, {mean(average_intraburst_gap(1:true_burst_number))}, m, 'H2');
+xlswrite(excel_name, average_intraburst_gap, m, 'H4');
 
 path = fileparts(mfilename('fullpath'));
 excel_name = sprintf('%s\\..\\Output\\%s\\APs_in_bursts.xlsx', path, output_folder);
