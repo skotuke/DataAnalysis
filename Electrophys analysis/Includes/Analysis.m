@@ -124,7 +124,7 @@ lnISI = log10(ISI_values);
 hist(lnISI, 50);
 xlabel('10\^');
 ylabel('Number of Occurences');
-title(file);
+title([file 'ISI');
 
 buckets = 250;
 lags = 25000;
@@ -143,5 +143,5 @@ end
 figure(4 + k_figure);
 subplot(k_rows,k_rows,k_spot);
 bar(b);
-title(file);
+title([file 'Autocorr']);
 end
