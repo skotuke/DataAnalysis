@@ -26,7 +26,7 @@ for j=1:size(data,3)
     ylabel('Voltage (mV)');
 end
 
-thresh_AP = -15; %what threshold voltage needs to pass to be considered as firing an AP
+thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
 
 frequency_list=zeros(sweeps,1);
 ISI_values_list=zeros(100,sweeps);
