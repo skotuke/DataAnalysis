@@ -1,4 +1,4 @@
-function [] = Burst_Analysis (ISI_values, AP_actual_sizes, AP_times_number, filename, output_folder, m)
+function [] = Burst_Analysis (ISI_values, AP_actual_sizes, AP_times_number, filename, output_folder, m, location, name)
 
 ISI_thresh_log = input('What determines interburst period? ');
 ISI_thresh=10^(ISI_thresh_log);
@@ -84,8 +84,9 @@ duty_cycles=duty_cycles(1:true_burst_number);
 perc_firing=burst_lengths./duty_cycles;
 total_firing=sum(burst_lengths)/sum(duty_cycles);
 burst_gaps=burst_gaps(1:true_burst_number);
-intraburst_gaps=intraburst_gaps(1:intraburst_number);
+intraburst_gaps=intraburst_gaps(1:true_burst_number);
 true_burst_gap=true_burst_gap(1:true_burst_number);
+average_intraburst_gap=average_intraburst_gap(1:true_burst_number);
 
 figure(7)
 hist(intraburst_gaps,50);
@@ -106,7 +107,7 @@ burst_AP_sizes_normalised_filtered=burst_AP_sizes_normalised;
 burst_AP_sizes_normalised_filtered(burst_AP_sizes_normalised_filtered==0)=nan;
 
 path = fileparts(mfilename('fullpath'));
-excel_name = sprintf('%s\\..\\Output\\%s\\burst_frequencies.xlsx', path, output_folder) %it tells the full path of the file
+excel_name = sprintf('%s\\burst_frequencies_%s.xlsx', location, name) %it tells the full path of the file
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Average'}, m, 'A2');
 xlswrite(excel_name, {total_firing} , m, 'A3');
@@ -132,14 +133,15 @@ xlswrite(excel_name, {mean(average_intraburst_gap(1:true_burst_number))}, m, 'H2
 xlswrite(excel_name, average_intraburst_gap, m, 'H4');
 
 path = fileparts(mfilename('fullpath'));
-excel_name = sprintf('%s\\..\\Output\\%s\\APs_in_bursts.xlsx', path, output_folder);
+excel_name = sprintf('%s\\APs_in_bursts_%s.xlsx', location, name);
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Burst No'}, m, 'A2');
 xlswrite(excel_name, transpose(true_burst_number_ID), m, 'B2');
 xlswrite(excel_name,burst_AP_sizes_filtered , m, 'B3');
 
 path = fileparts(mfilename('fullpath'));
-excel_name = sprintf('%s\\..\\Output\\%s\\APs_in_bursts_normalized.xlsx', path, output_folder);xlswrite(excel_name, {filename}, m, 'A1');
+excel_name = sprintf('%s\\APs_in_bursts_normalized_%s.xlsx', location, name);
+xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Burst No'}, m, 'A2');
 xlswrite(excel_name, transpose(true_burst_number_ID), m, 'B2');
 xlswrite(excel_name,burst_AP_sizes_normalised_filtered , m, 'B3');

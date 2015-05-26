@@ -69,11 +69,10 @@ for i = 1:number_of_files
         end
 
         fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-        [ISI_values, AP_actual_sizes, AP_times_number] = Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Burst_Analysis');
-        Burst_Analysis(ISI_values, AP_actual_sizes, AP_times_number, fullname, 'Burst_analysis', m);
+        [ISI_values, AP_actual_sizes, AP_times_number] = Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Burst_Analysis', path, filenames{1});
+        Burst_Analysis(ISI_values, AP_actual_sizes, AP_times_number, fullname, 'Burst_analysis', m, path, filenames{1});
         m = m + 1;
         
-        
-    end
+     end
 end
 

@@ -1,4 +1,4 @@
-function [ISI_values, AP_actual_sizes, AP_times_number,AP_sizes, AP_min_list] = Analysis(data, sweep, k, k_total, filter, filename, output_folder, location, name) 
+function [ISI_values, AP_actual_sizes, AP_times_number] = Analysis(data, sweep, k, k_total, filter, filename, output_folder, location, name) 
 % Function Analysis
 
 % after '=' is the name of the funtion and in brackets there is a list of
