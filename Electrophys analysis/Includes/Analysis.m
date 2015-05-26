@@ -120,6 +120,7 @@ xlabel('Time (sec)'); ylabel('Trial no');
 figure(3 + k_figure);
 subplot(k_rows, k_rows, k_spot);
 lnISI = log10(ISI_values);
+title('ISI' filenames(i));
 hist(lnISI, 50);
 xlabel('10\^');
 ylabel('Number of Occurences');

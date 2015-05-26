@@ -37,12 +37,12 @@ for i = 1:number_of_files
     
     data = reshape(data, duration * sweeps, 1);
 
-    filter = input(sprintf('Analysing %s. What is filter frequency? Leave blank for default (10000) or -1 to skip. ', name{1}));
-    if (isempty(filter) || filter == 0) 
+    filter = input(sprintf('Analysing %s. What is filter frequency? Leave blank for default (10000) or 0 to skip. ', name{1}));
+    if (isempty(filter) ) 
         filter = 10000;
     end
     
-    if filter < 0
+    if filter == 0
         close 99;
         continue;
     end
