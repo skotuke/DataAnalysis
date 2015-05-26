@@ -1,4 +1,4 @@
-function [] = Burst_Analysis (ISI_values, AP_sizes, AP_times_number, filename, output_folder, m)
+function [] = Burst_Analysis (ISI_values, AP_actual_sizes, AP_times_number, filename, output_folder, m)
 
 ISI_thresh_log = input('What determines interburst period? ');
 ISI_thresh=10^(ISI_thresh_log);
@@ -55,12 +55,12 @@ for j=2:burst_number
         
         burst_range = ((burst_gap_IDs(j-1)+1):burst_gap_IDs(j));% numbers refering to ISI intervals belonging to that duty cycle
         sizes_range = burst_range - burst_gap_IDs(j-1);
-        burst_AP_sizes(sizes_range, true_burst_number)=AP_sizes(burst_range);
-        burst_AP_sizes_normalised(sizes_range, true_burst_number)=AP_sizes(burst_range)/AP_sizes(burst_gap_IDs(j-1)+1);
+        burst_AP_sizes(sizes_range, true_burst_number)=AP_actual_sizes(burst_range);
+        burst_AP_sizes_normalised(sizes_range, true_burst_number)=AP_actual_sizes(burst_range)/AP_actual_sizes(burst_gap_IDs(j-1)+1);
 
         figure(5);
         subplot(k_rows,k_rows,k);
-        plot (AP_sizes(burst_range)/AP_sizes(burst_gap_IDs(j-1)+1));
+        plot (AP_actual_sizes(burst_range)/AP_actual_sizes(burst_gap_IDs(j-1)+1));
         xlabel('#AP');
         ylabel('Normalised');
 

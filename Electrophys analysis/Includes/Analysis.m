@@ -1,4 +1,4 @@
-function [ISI_values, AP_sizes, AP_times_number] = Analysis(data, sweep, k, k_total, filter, filename, output_folder, location, name) 
+function [ISI_values, AP_actual_sizes, AP_times_number,AP_sizes, AP_min_list] = Analysis(data, sweep, k, k_total, filter, filename, output_folder, location, name) 
 % Function Analysis
 
 % after '=' is the name of the funtion and in brackets there is a list of
@@ -64,12 +64,10 @@ AP_max = -1000;
 declining = 0;
 AP_times_number = 0;
 AP_sizes = zeros(10000, 1);
-gap = 0;
+AP_min_list=zeros(10000,1);
 
 for i = 1:duration 
     if sweep_data(i) > thresh_AP 
-        gap = 0;
-         
         if declining == 0
             if sweep_data(i) > AP_max
                 AP_max = sweep_data(i);
@@ -81,21 +79,23 @@ for i = 1:duration
                 AP_sizes(AP_times_number) = AP_max;
             end 
         end
-    else
-        gap = gap + 1;
-        if gap > thresh_gap
-            declining = 0;  
-            AP_max = -10000;
-        end
+        else
+        if declining==1&&sweep_data(i)>sweep_data(i-1)&&AP_times_number>0
+           declining=0;
+           AP_min_list(AP_times_number)=sweep_data(i-1);
+           AP_max=-10000;
+        end       
     end
-end
+ end
 AP_times=AP_times(2:AP_times_number);
 AP_times_shifted=AP_times_shifted(2:AP_times_number);
+AP_min_list=AP_min_list(1:AP_times_number);
 
 frequency = AP_times_number / (duration / filter);
 ISI = AP_times - AP_times_shifted;
 ISI_values = ISI / filter;
 AP_sizes = AP_sizes(1:AP_times_number);
+AP_actual_sizes=AP_sizes-AP_min_list;
 
 title_pos = strcat(ExcelCol(k), '1');
 freq_pos = strcat(ExcelCol(k), '2');
@@ -108,7 +108,6 @@ xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, frequency, 1, freq_pos{1});
 xlswrite(excel_name, mean(ISI_values), 1, mean_pos{1});
 xlswrite(excel_name, ISI_values, 1, data_pos{1});
-
 
 figure(2);
 hold on
