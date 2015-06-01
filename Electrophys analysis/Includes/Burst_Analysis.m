@@ -7,6 +7,9 @@ burst_gaps=zeros(1000,1);
 burst_gap_IDs=zeros(1000,1);
 average_intraburst_gap=zeros(1000,1);
 
+formatOut = 'HH-MM-SS';
+fulltime=strcat(date,{' '}, datestr(now,formatOut));
+
 for j=1:length(ISI_values)
     if ISI_values(j)>ISI_thresh
         burst_number=burst_number+1;
@@ -107,7 +110,7 @@ burst_AP_sizes_normalised_filtered=burst_AP_sizes_normalised;
 burst_AP_sizes_normalised_filtered(burst_AP_sizes_normalised_filtered==0)=nan;
 
 path = fileparts(mfilename('fullpath'));
-excel_name = sprintf('%s\\burst_frequencies_%s.xlsx', location, name) %it tells the full path of the file
+excel_name = sprintf('%s\\burst_frequencies_%s.xlsx', location, fulltime{1}) %it tells the full path of the file
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Average'}, m, 'A2');
 xlswrite(excel_name, {total_firing} , m, 'A3');
@@ -133,23 +136,15 @@ xlswrite(excel_name, {mean(average_intraburst_gap(1:true_burst_number))}, m, 'H2
 xlswrite(excel_name, average_intraburst_gap, m, 'H4');
 
 path = fileparts(mfilename('fullpath'));
-excel_name = sprintf('%s\\APs_in_bursts_%s.xlsx', location, name);
+excel_name = sprintf('%s\\APs_in_bursts_%s.xlsx', location, fulltime{1});
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Burst No'}, m, 'A2');
 xlswrite(excel_name, transpose(true_burst_number_ID), m, 'B2');
 xlswrite(excel_name,burst_AP_sizes_filtered , m, 'B3');
 
 path = fileparts(mfilename('fullpath'));
-excel_name = sprintf('%s\\APs_in_bursts_normalized_%s.xlsx', location, name);
+excel_name = sprintf('%s\\APs_in_bursts_normalized_%s.xlsx', location, fulltime{1});
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Burst No'}, m, 'A2');
 xlswrite(excel_name, transpose(true_burst_number_ID), m, 'B2');
 xlswrite(excel_name,burst_AP_sizes_normalised_filtered , m, 'B3');
-
-
-
-
-
-
-
-
