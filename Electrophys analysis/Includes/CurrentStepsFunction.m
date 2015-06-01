@@ -1,4 +1,4 @@
-function [AP_sizes_list, AP_actual_sizes_table]=CurrentStepsFunction(data, filename, output_folder, m, show_figures, location, name)
+function [AP_sizes_list, AP_actual_sizes_table, AP_number]=CurrentStepsFunction(data, filename, output_folder, m, show_figures, location, name)
 
 
 formatOut = 'HH-MM-SS';
@@ -94,9 +94,11 @@ for j=1:sweeps
     AP_normalised(j)=mean(AP_actual_sizes./AP_actual_sizes(1));
     frequency=AP_number;
     frequency_list(j)=frequency;
-    ISI=AP_times-AP_times_shifted;
+    AP_times_cut=AP_times(2:(AP_times_number));
+    AP_times_shifted=AP_times_shifted(2:(AP_times_number));
+    ISI=AP_times_cut-AP_times_shifted;
     ISI_number=AP_number-1;
-    ISI_values=ISI(2:AP_number)/10000;
+    ISI_values=ISI/10000;
     ISI_values_list(1:(AP_number-1),j)=ISI_values;
     ISI_average=(sum(ISI_values))/ISI_number;
     ISI_average_list(j)=ISI_average;
