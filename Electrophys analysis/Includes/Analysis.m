@@ -107,7 +107,7 @@ mean_pos = strcat(ExcelCol(k), '3');
 data_pos = strcat(ExcelCol(k), '5');
 
 path = fileparts(mfilename('fullpath'));
-excel_name = sprintf('%s\\Frequency_%s.xlsx', location, fulltime{1}) %it tells the full path of the file
+excel_name = sprintf('%s\\Frequency_%s.xlsx', location, date) %it tells the full path of the file
 xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, frequency, 1, freq_pos{1});
 xlswrite(excel_name, mean(ISI_values), 1, mean_pos{1});

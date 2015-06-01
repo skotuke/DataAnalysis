@@ -195,7 +195,7 @@ title_pos = strcat(ExcelCol(m+1 ), '1');
 data_pos = strcat(ExcelCol(m+1), '2');
 
 path = fileparts(mfilename('fullpath'));
-excel_name = sprintf('%s\\current_steps_%s.xlsx', location, fulltime{1}); %it tells the full path of the file
+excel_name = sprintf('%s\\current_steps_%s.xlsx', location, date); %it tells the full path of the file
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Step'}, m, 'B1');
 xlswrite(excel_name, step_number, m, 'B2');
@@ -210,21 +210,21 @@ xlswrite(excel_name, AP_normalised , m, 'F2');
 xlswrite(excel_name, {'Average ISI'}, m, 'G1');
 xlswrite(excel_name, ISI_average_list, m, 'G2');
 
-excel_name = sprintf('%s\\ISI_values_%s.xlsx', location, fulltime{1});
+excel_name = sprintf('%s\\ISI_values_%s.xlsx', location, date);
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'ISI values'},m, 'A3');
 xlswrite(excel_name, transpose(step_number),m, 'B3');
 xlswrite(excel_name, {'Step'}, m, 'B2');
 xlswrite(excel_name, ISI_values_list_filtered,m, 'B4');
 
-excel_name = sprintf('%s\\AP_normalised_%s.xlsx', location, fulltime{1});
+excel_name = sprintf('%s\\AP_normalised_%s.xlsx', location, date);
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Normalised AP'},m, 'A3');
 xlswrite(excel_name, transpose(step_number),m, 'B3');
 xlswrite(excel_name, {'Step'}, m, 'B2');
 xlswrite(excel_name, AP_actual_sizes_averages_table_filtered,m, 'B4');
 
-excel_name = sprintf('%s\\AP_actual_sizes_%s.xlsx', location, fulltime{1});
+excel_name = sprintf('%s\\AP_actual_sizes_%s.xlsx', location, date);
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Actual AP'},m, 'A3');
 xlswrite(excel_name, transpose(step_number),m, 'B3');
