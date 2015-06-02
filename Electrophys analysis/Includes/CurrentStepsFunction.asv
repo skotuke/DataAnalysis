@@ -116,23 +116,21 @@ for j=1:sweeps
     end
     
     if show_figures
-        if AP_times_number > 1
-            figure(2 + m * 10);
-            set(2 + m * 10, 'Name', filename);
-            hold on
-            for k=1:(length(ISI_values)-1);
-              line([ISI_values(k) ISI_values(k)], [j-1 j]);
-            end 
-            xlabel('ISI duration(sec)'); ylabel('#Sweep');
-        
-            figure(3 + m * 10);
-            set(3 + m * 10, 'Name', filename);
-            subplot(k_rows,k_rows,j);
-            plot (ISI_values);
-            xlabel('#ISI in a sweep');
-            ylabel('Duration (sec)');
-        end
-        
+        figure(2 + m * 10);
+        set(2 + m * 10, 'Name', filename);
+        hold on
+        for k=1:(length(ISI_values)-1);
+          line([ISI_values(k) ISI_values(k)], [j-1 j]);
+        end 
+        xlabel('ISI duration(sec)'); ylabel('#Sweep');
+
+        figure(3 + m * 10);
+        set(3 + m * 10, 'Name', filename);
+        subplot(k_rows,k_rows,j);
+        plot (ISI_values);
+        xlabel('#ISI in a sweep');
+        ylabel('Duration (sec)');
+
         figure(4 + m * 10);
         set(4 + m * 10, 'Name', filename);
         subplot(k_rows,k_rows,j);
@@ -199,6 +197,10 @@ if show_figures
 end
 
 warning('off', 'MATLAB:xlswrite:AddSheet');
+title_pos = strcat(ExcelCol(m+1 ), '1');
+data_pos = strcat(ExcelCol(m+1), '2');
+
+path = fileparts(mfilename('fullpath'));
 excel_name = sprintf('%s\\current_steps_%s.xlsx', location, date); %it tells the full path of the file
 xlswrite(excel_name, {filename}, m, 'A1');
 xlswrite(excel_name, {'Step'}, m, 'B1');
