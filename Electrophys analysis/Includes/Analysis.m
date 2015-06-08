@@ -59,8 +59,7 @@ xlabel('Time (sec)');
 ylabel('Voltage(mV)');
 title(file);
  
-thresh_AP = -40; %what threshold voltage needs to pass to be considered as firing an AP
-thresh_gap = filter / 10000; %adjust this if you think that not everything is getting picked up or too much is getting picked up
+thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
 
 AP_times = zeros(10000, 1);
 AP_times_shifted = zeros(10000, 1);
@@ -83,14 +82,14 @@ for i = 1:duration
                 AP_sizes(AP_times_number) = AP_max;
             end 
         end
-        else
+    else
         if declining==1&&sweep_data(i)>sweep_data(i-1)&&AP_times_number>0
            declining=0;
            AP_min_list(AP_times_number)=sweep_data(i-1);
            AP_max=-10000;
         end       
     end
- end
+end
 AP_times=AP_times(2:AP_times_number);
 AP_times_shifted=AP_times_shifted(2:AP_times_number);
 AP_min_list=AP_min_list(1:AP_times_number);
@@ -106,7 +105,6 @@ freq_pos = strcat(ExcelCol(k), '2');
 mean_pos = strcat(ExcelCol(k), '3');
 data_pos = strcat(ExcelCol(k), '5');
 
-path = fileparts(mfilename('fullpath'));
 excel_name = sprintf('%s\\Frequency_%s.xlsx', location, date) %it tells the full path of the file
 xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, frequency, 1, freq_pos{1});
@@ -119,7 +117,6 @@ for j = 1:length(ISI_values)
     line([ISI_values(j) ISI_values(j)], [k-1 k]);
 end 
 xlabel('Time (sec)'); ylabel('Trial no'); 
-
   
 figure(3 + k_figure);
 subplot(k_rows, k_rows, k_spot);
@@ -143,8 +140,10 @@ b = zeros(buckets,1);
 for i = 0:(buckets-1)
     b(i+1) = mean(a((i*bucketsize+1):((i+1)*bucketsize),1));
 end
+
 figure(4 + k_figure);
 subplot(k_rows,k_rows,k_spot);
 bar(b);
 title([file 'Autocorr']);
+
 end

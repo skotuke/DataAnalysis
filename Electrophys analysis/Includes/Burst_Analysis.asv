@@ -132,9 +132,9 @@ xlswrite(excel_name, perc_firing*100, m, 'G4');
 xlswrite(excel_name, {'Intraburst gap'}, m, 'H1');
 xlswrite(excel_name, {mean(average_intraburst_gap(1:true_burst_number))}, m, 'H2');
 xlswrite(excel_name, average_intraburst_gap, m, 'H4');
-xlswrite(excel_name, {'AP count'}, m, 'I1');
-xlswrite(excel_name, {mean(burst_AP_counts)}, m, 'I2');
-xlswrite(excel_name, burst_AP_counts, m, 'I4');
+xlswrite(excel_name, {'AP count'}, m, 'H1');
+xlswrite(excel_name, {mean(average_intraburst_gap(1:true_burst_number))}, m, 'H2');
+xlswrite(excel_name, average_intraburst_gap, m, 'H4');
 
 path = fileparts(mfilename('fullpath'));
 excel_name = sprintf('%s\\APs_in_bursts_%s.xlsx', location, date);
