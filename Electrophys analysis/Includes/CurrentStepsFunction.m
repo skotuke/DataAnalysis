@@ -24,6 +24,7 @@ current_injection=-50:50:700;
 figure(1 + m * 10);
 set(1 + m * 10, 'Name', filename);
 hold on
+set (figure(1+m*10), 'visible','off');
 for j=1:size(data,3)
     subplot(k_rows,k_rows,j);
     plot(duration_s,data(duration,1,j));
@@ -209,13 +210,13 @@ end
 warning('off', 'MATLAB:xlswrite:AddSheet');
 excel_name = sprintf('%s\\current_steps_%s.xlsx', location, date); %it tells the full path of the file
 xlswrite(excel_name, {filename}, m, 'A1');
-xlswrite(excel_name, input_resistance, m, 'A2');
 xlswrite(excel_name, {'Step'}, m, 'B1');
 xlswrite(excel_name, step_number, m, 'B2');
 xlswrite(excel_name, {'Current'}, m, 'C1');
 xlswrite(excel_name, current_injection', m, 'C2');
 xlswrite(excel_name, {'Frequency'}, m, 'D1');
 xlswrite(excel_name, frequency_list, m, 'D2');
+xlswrite(excel_name, input_resistance, m, 'D19');
 xlswrite(excel_name, {'AP actual size'}, m, 'E1');
 xlswrite(excel_name, AP_actual_sizes_averages_list, m, 'E2');
 xlswrite(excel_name, {'AP normalised'}, m, 'F1');
@@ -223,23 +224,43 @@ xlswrite(excel_name, AP_normalised , m, 'F2');
 xlswrite(excel_name, {'Average ISI'}, m, 'G1');
 xlswrite(excel_name, ISI_average_list, m, 'G2');
 
-excel_name = sprintf('%s\\ISI_values_%s.xlsx', location, date);
-xlswrite(excel_name, {filename}, m, 'A1');
-xlswrite(excel_name, {'ISI values'},m, 'A3');
-xlswrite(excel_name, transpose(step_number),m, 'B3');
-xlswrite(excel_name, {'Step'}, m, 'B2');
-xlswrite(excel_name, ISI_values_list_filtered,m, 'B4');
+%excel_name = sprintf('%s\\ISI_values_%s.xlsx', location, date);
+%xlswrite(excel_name, {filename}, m, 'A1');
+%xlswrite(excel_name, {'ISI values'},m, 'A3');
+%xlswrite(excel_name, transpose(step_number),m, 'B3');
+%xlswrite(excel_name, {'Step'}, m, 'B2');
+%xlswrite(excel_name, ISI_values_list_filtered,m, 'B4');
 
-excel_name = sprintf('%s\\AP_normalised_%s.xlsx', location, date);
-xlswrite(excel_name, {filename}, m, 'A1');
-xlswrite(excel_name, {'Normalised AP'},m, 'A3');
-xlswrite(excel_name, transpose(step_number),m, 'B3');
-xlswrite(excel_name, {'Step'}, m, 'B2');
-xlswrite(excel_name, AP_actual_sizes_averages_table_filtered,m, 'B4');
+%excel_name = sprintf('%s\\AP_normalised_%s.xlsx', location, date);
+%xlswrite(excel_name, {filename}, m, 'A1');
+%xlswrite(excel_name, {'Normalised AP'},m, 'A3');
+%xlswrite(excel_name, transpose(step_number),m, 'B3');
+%xlswrite(excel_name, {'Step'}, m, 'B2');
+%xlswrite(excel_name, AP_actual_sizes_averages_table_filtered,m, 'B4');
 
-excel_name = sprintf('%s\\AP_actual_sizes_%s.xlsx', location, date);
-xlswrite(excel_name, {filename}, m, 'A1');
-xlswrite(excel_name, {'Actual AP'},m, 'A3');
-xlswrite(excel_name, transpose(step_number),m, 'B3');
-xlswrite(excel_name, {'Step'}, m, 'B2');
-xlswrite(excel_name, AP_actual_sizes_table_filtered, m, 'B4');
+%excel_name = sprintf('%s\\AP_actual_sizes_%s.xlsx', location, date);
+%xlswrite(excel_name, {filename}, m, 'A1');
+%xlswrite(excel_name, {'Actual AP'},m, 'A3');
+%xlswrite(excel_name, transpose(step_number),m, 'B3');
+%xlswrite(excel_name, {'Step'}, m, 'B2');
+%xlswrite(excel_name, AP_actual_sizes_table_filtered, m, 'B4');
+
+title_pos = strcat(ExcelCol(m+1), '1');
+freq_pos = strcat(ExcelCol(m+1), '2');
+input_pos = strcat(ExcelCol(m+1), '19');
+
+excel_name = sprintf('%s\\CS Freq summary_%s.xlsx', location, date); %it tells the full path of the file
+xlswrite(excel_name, {'Current'}, 1, 'A1');
+xlswrite(excel_name, current_injection', m, 'A2');
+xlswrite(excel_name, {'Input resistance'}, 1, 'A19');
+xlswrite(excel_name, {filename}, 1, title_pos{1});
+xlswrite(excel_name, frequency_list, 1, freq_pos{1});
+xlswrite(excel_name, input_resistance, 1, input_pos{1});
+
+excel_name = sprintf('%s\\CS AP normalised summary_%s.xlsx', location, date); %it tells the full path of the file
+xlswrite(excel_name, {'Current'}, 1, 'A1');
+xlswrite(excel_name, current_injection', m, 'A2');
+xlswrite(excel_name, {filename}, 1, title_pos{1});
+xlswrite(excel_name, AP_normalised, 1, freq_pos{1});
+
+
