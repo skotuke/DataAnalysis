@@ -59,7 +59,7 @@ xlabel('Time (sec)');
 ylabel('Voltage(mV)');
 title(file);
  
-thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
+thresh_AP = -15; %what threshold voltage needs to pass to be considered as firing an AP
 
 AP_times = zeros(10000, 1);
 AP_times_shifted = zeros(10000, 1);

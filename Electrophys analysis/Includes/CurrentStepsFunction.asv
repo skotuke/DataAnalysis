@@ -54,10 +54,10 @@ for j=1:sweeps
     fire = 0;
     
     
-    if j==1
+    if sweep==1
         baseline_mean=mean(data(1:115000));
-        step_mean=mean(data(150000:210000));
-        input_resistance=(baseline_mean-step_mean)/50*1000;     
+        step_mean=mean(data(150000:210000);
+        input_resistance=(baseline_mean-step_mean)/50;     
     end
   
     for i = duration
@@ -209,7 +209,6 @@ end
 warning('off', 'MATLAB:xlswrite:AddSheet');
 excel_name = sprintf('%s\\current_steps_%s.xlsx', location, date); %it tells the full path of the file
 xlswrite(excel_name, {filename}, m, 'A1');
-xlswrite(excel_name, input_resistance, m, 'A2');
 xlswrite(excel_name, {'Step'}, m, 'B1');
 xlswrite(excel_name, step_number, m, 'B2');
 xlswrite(excel_name, {'Current'}, m, 'C1');

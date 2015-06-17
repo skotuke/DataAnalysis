@@ -75,8 +75,8 @@ for j=2:burst_number
     end
 end
 
-burst_number
-true_burst_number
+burst_number;
+true_burst_number;
 
 burst_AP_counts=burst_AP_counts(1:true_burst_number);
 true_burst_number_ID=true_burst_number_ID(1:true_burst_number);
