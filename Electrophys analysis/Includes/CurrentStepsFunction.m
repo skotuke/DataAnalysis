@@ -101,7 +101,7 @@ for j=1:sweeps
         ISI=AP_times_cut-AP_times_shifted;
         ISI_number=AP_number-1;
         ISI_values=ISI/10000;
-        ISI_values_list(1:(AP_number-1),j)=ISI_values;
+        ISI_values_list(1:length(ISI_values),j)=ISI_values;
         ISI_average=(sum(ISI_values))/ISI_number;
         ISI_average_list(j)=ISI_average;
     end
