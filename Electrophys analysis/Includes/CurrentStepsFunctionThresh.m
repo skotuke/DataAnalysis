@@ -1,4 +1,4 @@
-function [AP_sizes_list, AP_actual_sizes_table, AP_number]=CurrentStepsFunction(data, filename, output_folder, m, show_figures, location, name)
+function [AP_sizes_list, AP_actual_sizes_table, AP_number]=CurrentStepsFunctionThresh(data, filename, output_folder, m, show_figures, location, name)
 
 
 formatOut = 'HH-MM-SS';
