@@ -1,15 +1,13 @@
-function [AP_sizes_list, AP_actual_sizes_table, AP_number]=CurrentStepsFunction(data, filename, output_folder, m, show_figures, location, name)
-
-
-formatOut = 'HH-MM-SS';
-fulltime=strcat(date,{' '}, datestr(now,formatOut));
+function [AP_sizes_list, AP_actual_sizes_table, potential_AP_number]=CurrentStepsFunction(data, filename, output_folder, m, show_figures, location, name)
 
 if nargin < 5
     show_figures = 1;
 end
 
 k_rows=4;
-duration = 115000:217700;
+duration_start = 115000;
+duration_end = 215500;
+duration = duration_start:duration_end;
 duration_s=duration/100000;
 
 sweeps=size(data,3);
@@ -32,8 +30,6 @@ for j=1:size(data,3)
     ylabel('Voltage (mV)');
 end
 
-thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
-
 frequency_list=zeros(sweeps,1);
 ISI_values_list=zeros(100,sweeps);
 AP_sizes_list=zeros(100,sweeps);
@@ -42,86 +38,126 @@ AP_normalised=zeros(sweeps,1);
 AP_actual_sizes_averages_table=zeros(100,sweeps);
 
 for j=1:sweeps
-    AP_number = 0;
     AP_times=zeros(100,1);
-    AP_times_shifted=zeros(100,1);
+    ISI=zeros(100,1);
+    potential_AP_times=zeros(500,1);
+    potential_AP_number=0;
+    AP_number=0;
     AP_sizes=zeros(100,1);
-    AP_mins=zeros(100,1); %a list of mins of APs in a sweep
-    AP_max=-1000;
-    declining=0;
-    AP_times_number=0;
-    AP_min_recorded=1;
     sweep_data=data(1:size(data,1),1,j);
     fire = 0;
-    
-    
+
     if j==1
         baseline_mean=mean(data(1:115000));
         step_mean=mean(data(150000:210000));
         input_resistance=(baseline_mean-step_mean)/50*1000;     
     end
   
-    for i = duration
-        if sweep_data(i) > thresh_AP 
-            if fire==0
-                fire=1;
-                AP_number=AP_number+1;
-            end
-
-            if sweep_data(i) > AP_max && declining == 0
-                 AP_max=sweep_data(i);
-            elseif sweep_data(i) < AP_max 
-                 declining=1;
-                 AP_times_number=AP_times_number+1;
-                 AP_times(AP_times_number)=i-1;
-                 AP_times_shifted(AP_times_number+1)=i-1;
-                 AP_sizes(AP_times_number)=AP_max;
-                 AP_min_recorded=0;
-                 AP_max=-10000;
-            end 
-        else
-            fire=0;
-            declining=0;  
-
-            if sweep_data(i) > sweep_data(i-1) && ~AP_min_recorded
-                AP_min=sweep_data(i-1);
-                AP_mins(AP_times_number)=AP_min;
-                AP_min_recorded=1;
-            end
-        end
-    end
+    mavg = 0;
+    mavgcount = 0;
+    AP_min_last = -1000;
+    AP_max_last = 1000;
+    AP_last_real = 0;
     
-    if AP_times_number < 1
+    for i = duration
+        mavg = mavg + sweep_data(i-1);
+        mavgcount = mavgcount + 1;
+        if mavgcount > 100
+           mavg = mavg - sweep_data(i-101);
+           mavgcount = mavgcount - 1;
+        end
+        
+        
+        if sweep_data(i) > mavg / mavgcount || i == duration_end %increasing
+            if fire == 0
+                fire = 1;
+                if potential_AP_number > 0
+                    peak = i - mavgcount;
+                    for n = 1:(mavgcount - 1)
+                       if sweep_data(i - mavgcount + n) < sweep_data(peak)
+                           peak = i - mavgcount + n;
+                       end
+                    end
+                   
+                    
+                    AP_min = sweep_data(peak);
+                    AP_size = AP_max-AP_min;
+                    AP_min_last = AP_min;
+                    AP_last_real = 0;
+                    if AP_size > 5 && (AP_number == 0 || AP_size > 0.5 * AP_sizes(AP_number) || AP_size > 10)
+                        AP_number = AP_number + 1;
+                        AP_last_real = 1;
+                        AP_sizes(AP_number) = AP_size;
+                        AP_times(AP_number) = potential_AP_times(potential_AP_number);
+                        if AP_number > 1
+                            ISI(AP_number - 1) = AP_times(AP_number) - AP_times(AP_number - 1);
+                        end
+                    end
+                end
+            end
+        elseif sweep_data(i) < mavg / mavgcount
+            if fire == 1
+                peak = i - mavgcount;
+                for n = 1:(mavgcount - 1)
+                   if sweep_data(i - mavgcount + n) > sweep_data(peak)
+                       peak = i - mavgcount + n;
+                   end
+                end
+                
+                if sweep_data(peak) - AP_min_last < 2
+                    fire = 0;
+                    AP_max = AP_max_last;
+                    if AP_last_real
+                        AP_number = AP_number - 1;
+                    end
+                else
+                    potential_AP_number = potential_AP_number + 1;
+                    fire = 0;  
+                    AP_max = sweep_data(peak);
+                    AP_max_last = AP_max;
+                    potential_AP_times(potential_AP_number) = peak;
+                end
+            end
+        end   
+    end
+
+    if AP_number < 1
         continue
     end
-    
-    AP_sizes=AP_sizes(1:AP_times_number); 
-    AP_mins=AP_mins(1:(AP_times_number)); %cutting the list of AP mins to get rid of extra zeros.AP_times_number-1 because the minimum after the last action potential is no in a current step anymore
-    AP_actual_sizes=AP_sizes-AP_mins; %the list of actualAP sizes. baseline min precedes it action potential
-    AP_actual_sizes_average=mean(AP_actual_sizes); %AP average size for a sweep
-    AP_actual_sizes_averages_list(j)=AP_actual_sizes_average;
-    AP_normalised(j)=mean(AP_actual_sizes./AP_actual_sizes(1));
-    frequency=AP_number;
-    frequency_list(j)=frequency;
-    
-    if AP_times_number > 1
-        AP_times_cut=AP_times(2:(AP_times_number));
-        AP_times_shifted=AP_times_shifted(2:(AP_times_number));
-        ISI=AP_times_cut-AP_times_shifted;
+
+
+    if AP_number > 1
+        ISI = ISI(1:(AP_number-1));
+        mean_ISI = mean(ISI);
+        for n = 1:(AP_number - 1)
+            if ISI(n) > mean_ISI * 3
+                AP_number = n;
+                ISI = ISI(1:n-1);
+                break
+            end
+        end
+            
         ISI_number=AP_number-1;
-        ISI_values=ISI/10000;
+        ISI_values=ISI/100000;
         ISI_values_list(1:length(ISI_values),j)=ISI_values;
         ISI_average=(sum(ISI_values))/ISI_number;
         ISI_average_list(j)=ISI_average;
     end
-    
-    AP_sizes_list(1:AP_times_number,j)=AP_sizes;
-    AP_actual_sizes_table(1:(AP_times_number),j)=AP_actual_sizes;
+
+    AP_sizes=AP_sizes(1:AP_number); 
+    AP_actual_sizes_average=mean(AP_sizes); %AP average size for a sweep
+    AP_actual_sizes_averages_list(j)=AP_actual_sizes_average;
+    AP_normalised(j)=mean(AP_sizes./AP_sizes(1));
+    frequency=AP_number;
+    frequency_list(j)=frequency;
+
+    AP_sizes_list(1:AP_number,j)=AP_sizes;
+    AP_actual_sizes_table(1:(AP_number),j)=AP_sizes;
     AP_average=mean(AP_sizes);
     AP_average_list(j)=AP_average;
 
     if AP_number > 0
-        AP_actual_sizes_averages_table(1:AP_times_number, j)=AP_actual_sizes./AP_actual_sizes(1); 
+        AP_actual_sizes_averages_table(1:AP_number, j)=AP_sizes./AP_sizes(1); 
     end
     
     if show_figures
@@ -145,7 +181,7 @@ for j=1:sweeps
         figure(4 + m * 10);
         set(4 + m * 10, 'Name', filename);
         subplot(k_rows,k_rows,j);
-        if AP_number > 0 
+        if potential_AP_number > 0 
             plot ((AP_sizes./AP_sizes(1)));
         end
         xlabel('#AP in a sweep');
@@ -161,7 +197,7 @@ for j=1:sweeps
         figure(6 + m * 10);
         set(6 + m * 10, 'Name', filename);
         subplot(k_rows,k_rows,j);
-        if AP_number > 0 
+        if potential_AP_number > 0 
             plot ((AP_actual_sizes./AP_actual_sizes(1)));
         end
         xlabel('#AP in a sweep');
@@ -214,53 +250,64 @@ xlswrite(excel_name, {'Step'}, m, 'B1');
 xlswrite(excel_name, step_number, m, 'B2');
 xlswrite(excel_name, {'Current'}, m, 'C1');
 xlswrite(excel_name, current_injection', m, 'C2');
-xlswrite(excel_name, {'Frequency'}, m, 'D1');
+xlswrite(excel_name, {'APs'}, m, 'D1');
 xlswrite(excel_name, frequency_list, m, 'D2');
-xlswrite(excel_name, input_resistance, m, 'D19');
-xlswrite(excel_name, {'AP actual size'}, m, 'E1');
-xlswrite(excel_name, AP_actual_sizes_averages_list, m, 'E2');
-xlswrite(excel_name, {'AP normalised'}, m, 'F1');
-xlswrite(excel_name, AP_normalised , m, 'F2');
-xlswrite(excel_name, {'Average ISI'}, m, 'G1');
-xlswrite(excel_name, ISI_average_list, m, 'G2');
+average_frequencies = 1 ./ ISI_average_list;
+average_frequencies(~isfinite(average_frequencies)) = 0;
+xlswrite(excel_name, {'AV frequency'}, m, 'E1');
+xlswrite(excel_name, average_frequencies, m, 'E2');
+xlswrite(excel_name, input_resistance, m, 'E19');
+xlswrite(excel_name, {'AP actual size'}, m, 'F1');
+xlswrite(excel_name, AP_actual_sizes_averages_list, m, 'F2');
+xlswrite(excel_name, {'AP normalised'}, m, 'G1');
+xlswrite(excel_name, AP_normalised , m, 'G2');
+xlswrite(excel_name, {'Average ISI'}, m, 'H1');
+xlswrite(excel_name, ISI_average_list, m, 'H2');
 
-%excel_name = sprintf('%s\\ISI_values_%s.xlsx', location, date);
-%xlswrite(excel_name, {filename}, m, 'A1');
-%xlswrite(excel_name, {'ISI values'},m, 'A3');
-%xlswrite(excel_name, transpose(step_number),m, 'B3');
-%xlswrite(excel_name, {'Step'}, m, 'B2');
-%xlswrite(excel_name, ISI_values_list_filtered,m, 'B4');
 
-%excel_name = sprintf('%s\\AP_normalised_%s.xlsx', location, date);
-%xlswrite(excel_name, {filename}, m, 'A1');
-%xlswrite(excel_name, {'Normalised AP'},m, 'A3');
-%xlswrite(excel_name, transpose(step_number),m, 'B3');
-%xlswrite(excel_name, {'Step'}, m, 'B2');
-%xlswrite(excel_name, AP_actual_sizes_averages_table_filtered,m, 'B4');
+excel_name = sprintf('%s\\ISI_values_%s.xlsx', location, date);
+xlswrite(excel_name, {filename}, m, 'A1');
+xlswrite(excel_name, {'ISI values'},m, 'A3');
+xlswrite(excel_name, transpose(step_number),m, 'B3');
+xlswrite(excel_name, {'Step'}, m, 'B2');
+xlswrite(excel_name, ISI_values_list_filtered,m, 'B4');
 
-%excel_name = sprintf('%s\\AP_actual_sizes_%s.xlsx', location, date);
-%xlswrite(excel_name, {filename}, m, 'A1');
-%xlswrite(excel_name, {'Actual AP'},m, 'A3');
-%xlswrite(excel_name, transpose(step_number),m, 'B3');
-%xlswrite(excel_name, {'Step'}, m, 'B2');
-%xlswrite(excel_name, AP_actual_sizes_table_filtered, m, 'B4');
+excel_name = sprintf('%s\\AP_normalised_%s.xlsx', location, date);
+xlswrite(excel_name, {filename}, m, 'A1');
+xlswrite(excel_name, {'Normalised AP'},m, 'A3');
+xlswrite(excel_name, transpose(step_number),m, 'B3');
+xlswrite(excel_name, {'Step'}, m, 'B2');
+xlswrite(excel_name, AP_actual_sizes_averages_table_filtered,m, 'B4');
+
+excel_name = sprintf('%s\\AP_actual_sizes_%s.xlsx', location, date);
+xlswrite(excel_name, {filename}, m, 'A1');
+xlswrite(excel_name, {'Actual AP'},m, 'A3');
+xlswrite(excel_name, transpose(step_number),m, 'B3');
+xlswrite(excel_name, {'Step'}, m, 'B2');
+xlswrite(excel_name, AP_actual_sizes_table_filtered, m, 'B4');
 
 title_pos = strcat(ExcelCol(m+1), '1');
 freq_pos = strcat(ExcelCol(m+1), '2');
 input_pos = strcat(ExcelCol(m+1), '19');
 
-excel_name = sprintf('%s\\CS Freq summary_%s.xlsx', location, date); %it tells the full path of the file
+excel_name = sprintf('%s\\CS APs summary_%s.xlsx', location, date); %it tells the full path of the file
 xlswrite(excel_name, {'Current'}, 1, 'A1');
-xlswrite(excel_name, current_injection', m, 'A2');
-xlswrite(excel_name, {'Input resistance'}, 1, 'A19');
+xlswrite(excel_name, current_injection', 1, 'A2');
 xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, frequency_list, 1, freq_pos{1});
-xlswrite(excel_name, input_resistance, 1, input_pos{1});
+
 
 excel_name = sprintf('%s\\CS AP normalised summary_%s.xlsx', location, date); %it tells the full path of the file
 xlswrite(excel_name, {'Current'}, 1, 'A1');
-xlswrite(excel_name, current_injection', m, 'A2');
+xlswrite(excel_name, current_injection', 1, 'A2');
 xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, AP_normalised, 1, freq_pos{1});
 
+excel_name = sprintf('%s\\CS freq summary_%s.xlsx', location, date); %it tells the full path of the file
+xlswrite(excel_name, {'Current'}, 1, 'A1');
+xlswrite(excel_name, current_injection', 1, 'A2');
+xlswrite(excel_name, {filename}, 1, title_pos{1});
+xlswrite(excel_name, average_frequencies, 1, freq_pos{1});
+xlswrite(excel_name, {'Input resistance'}, 1, 'A19');
+xlswrite(excel_name, input_resistance, 1, input_pos{1});
 
