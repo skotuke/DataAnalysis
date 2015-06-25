@@ -84,7 +84,7 @@ for j=1:sweeps
                     AP_size = AP_max-AP_min;
                     AP_min_last = AP_min;
                     AP_last_real = 0;
-                    if AP_size > 5 && (AP_number == 0 || AP_size > 0.5 * AP_sizes(AP_number) || AP_size > 10)
+                    if AP_size > 10 && (AP_number == 0 || AP_size > 0.5 * AP_sizes(AP_number) || AP_size > 15)
                         AP_number = AP_number + 1;
                         AP_last_real = 1;
                         AP_sizes(AP_number) = AP_size;
@@ -130,9 +130,9 @@ for j=1:sweeps
         ISI = ISI(1:(AP_number-1));
         mean_ISI = mean(ISI);
         for n = 1:(AP_number - 1)
-            if ISI(n) > mean_ISI * 3
+            if ISI(n) > mean_ISI * 3 && AP_sizes(n)<30;
                 AP_number = n;
-                ISI = ISI(1:n-1);
+                ISI = ISI(1:n-1); 
                 break
             end
         end
