@@ -28,14 +28,14 @@ for i = 1:number_of_files
     sweeps = size(data, 3);
     sq = ceil(sqrt(sweeps));
 
-    figure(99);
-    for j = 1:sweeps
-        subplot(sq, sq, j);
-        plot(data(1:duration, 1, j));
-        title(filenames(i));
-    end
+     data = reshape(data, duration * sweeps, 1);
     
-    data = reshape(data, duration * sweeps, 1);
+    figure(99);
+    plot(data(1:duration*sweeps, 1));
+    title(filenames(i));
+   
+    
+   
 
     filter = input(sprintf('Analysing %s. What is filter frequency? Leave blank for default (10000) or 0 to skip. ', name{1}));
     if (isempty(filter) ) 
