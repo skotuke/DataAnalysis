@@ -124,7 +124,7 @@ lnISI = log10(ISI_values);
 hist(lnISI, 50);
 xlabel('10\^');
 ylabel('Number of Occurences');
-title([file 'ISI']);
+title({filename});
 
 buckets = 250;
 lags = 25000;
