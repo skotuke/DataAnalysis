@@ -70,7 +70,7 @@ AP_sizes = zeros(10000, 1);
 AP_min_list = zeros(100000,1);
 
 for i = 1:duration 
-    if sweep_data(i) >= thresh_AP || (declining == 0 && AP_max >= thresh_AP)
+    if sweep_data(i) > thresh_AP || (declining == 0 && AP_max > thresh_AP)
         if declining == 0
             if sweep_data(i) > AP_max
                 AP_max = sweep_data(i);
