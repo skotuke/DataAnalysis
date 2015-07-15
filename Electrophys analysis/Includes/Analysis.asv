@@ -99,19 +99,17 @@ ISI = AP_times - AP_times_shifted;
 ISI_values = ISI / filter;
 AP_sizes = AP_sizes(1:AP_times_number);
 AP_actual_sizes=AP_sizes-AP_min_list;
-CV=std(ISI_values)/mean(ISI_values);
 
 title_pos = strcat(ExcelCol(k), '1');
 freq_pos = strcat(ExcelCol(k), '2');
 mean_pos = strcat(ExcelCol(k), '3');
-CV_pos=strcat(ExcelCol(k),'4');
+CV_
 data_pos = strcat(ExcelCol(k), '6');
 
 excel_name = sprintf('%s\\Frequency_%s.xlsx', location, date) %it tells the full path of the file
 xlswrite(excel_name, {filename}, 1, title_pos{1});
 xlswrite(excel_name, frequency, 1, freq_pos{1});
 xlswrite(excel_name, mean(ISI_values), 1, mean_pos{1});
-xlswrite(excel_name, CV, 1, CV_pos{1});
 xlswrite(excel_name, ISI_values, 1, data_pos{1});
 
 figure(2);
