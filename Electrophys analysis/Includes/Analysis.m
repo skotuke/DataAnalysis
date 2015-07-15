@@ -59,7 +59,7 @@ xlabel('Time (sec)');
 ylabel('Voltage(mV)');
 title(file);
  
-thresh_AP =-20; %what threshold voltage needs to pass to be considered as firing an AP
+thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
 
 AP_times = zeros(10000, 1);
 AP_times_shifted = zeros(10000, 1);
@@ -67,10 +67,10 @@ AP_max = -1000;
 declining = 0;
 AP_times_number = 0;
 AP_sizes = zeros(10000, 1);
-AP_min_list=zeros(100000,1);
+AP_min_list = zeros(100000,1);
 
 for i = 1:duration 
-    if sweep_data(i) > thresh_AP 
+    if sweep_data(i) >= thresh_AP || (declining == 0 && AP_max >= thresh_AP)
         if declining == 0
             if sweep_data(i) > AP_max
                 AP_max = sweep_data(i);
@@ -83,10 +83,10 @@ for i = 1:duration
             end 
         end
     else
-        if declining==1&&sweep_data(i)>sweep_data(i-1)&&AP_times_number>0
-           declining=0;
-           AP_min_list(AP_times_number)=sweep_data(i-1);
-           AP_max=-10000;
+        if declining == 1 && sweep_data(i) > sweep_data(i-1) && AP_times_number > 0
+           declining = 0;
+           AP_min_list(AP_times_number) = sweep_data(i-1);
+           AP_max = -10000;
         end       
     end
 end

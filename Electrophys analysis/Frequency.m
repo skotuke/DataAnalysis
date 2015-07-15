@@ -28,7 +28,7 @@ for i = 1:number_of_files
     sweeps = size(data, 3);
     sq = ceil(sqrt(sweeps));
 
-     data = reshape(data, duration * sweeps, 1);
+    data = reshape(data, duration * sweeps, 1);
     
     figure(99);
     plot(data(1:duration*sweeps, 1));
