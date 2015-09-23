@@ -1,6 +1,9 @@
-img = imread('MAX_Cl98_954_ko_p2.tif');
-stem_sensitivity = 0.9; % higher is more sensitive, must be under 1.
-brightness = 0.1; 
+[filename, path] = uigetfile({'*.tif'}, 'Select_file(s)');
+
+
+img = imread(sprintf('%s%s', path, filename));
+stem_sensitivity = 0.7; % higher is more sensitive, must be under 1.
+brightness = 0.16; 
 
 imgbw = im2bw(img, brightness);
 figure(1);
@@ -13,7 +16,7 @@ sizes = cellfun(@numel, comps.PixelIdxList);
 imgbw(1:comps.ImageSize(1), 1:comps.ImageSize(2)) = 0;
 imgbw(comps.PixelIdxList{idx}) = 1;
 figure(2);
-image(imgbw);
+image(imgbw*10);
 sprintf('Size of the cell (um^2): %f', size*0.22*0.22)
 
 
@@ -60,6 +63,6 @@ while found_dendrite == 0
 end
 
 hull = bwconvhull(imgbw);
-sprintf('Size of spread (um^2): %f', sum(sum(hull))*0.22*0.22)
-figure(3);
-image(xor(hull,imgbw));
+sprintf('Size of spread (um^2): %f', sum(sum(hull))*0.22*0.22);
+%figure(3);
+%image(xor(hull,imgbw));
