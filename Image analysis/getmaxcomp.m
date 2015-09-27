@@ -1,9 +1,12 @@
 [filename, path] = uigetfile({'*.tif'}, 'Select_file(s)');
 
+file = sprintf('%s%s', path, filename);
+img = imread(file);
+imginfo = imfinfo(file);
 
-img = imread(sprintf('%s%s', path, filename));
+resolution = 1 / imginfo.XResolution;
 stem_sensitivity = 0.7; % higher is more sensitive, must be under 1.
-brightness = 0.16; 
+brightness = 0.17; 
 
 imgbw = im2bw(img, brightness);
 figure(1);
@@ -17,7 +20,8 @@ imgbw(1:comps.ImageSize(1), 1:comps.ImageSize(2)) = 0;
 imgbw(comps.PixelIdxList{idx}) = 1;
 figure(2);
 image(imgbw*10);
-sprintf('Size of the cell (um^2): %f', size*0.22*0.22)
+cellsize=size*(resolution^2);
+sprintf('Size of the cell (um^2): %f', cellsize)
 
 
 
@@ -63,6 +67,6 @@ while found_dendrite == 0
 end
 
 hull = bwconvhull(imgbw);
-sprintf('Size of spread (um^2): %f', sum(sum(hull))*0.22*0.22);
+sprintf('Size of spread (um^2): %f', sum(sum(hull))*(resolution^2));
 %figure(3);
 %image(xor(hull,imgbw));
