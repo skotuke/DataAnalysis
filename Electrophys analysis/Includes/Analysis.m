@@ -58,6 +58,7 @@ plot(duration_s, sweep_data);
 xlabel('Time (sec)');
 ylabel('Voltage(mV)');
 title(file);
+set(figure(1 + k_figure), 'Visible', 'On');
  
 thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
 
@@ -120,6 +121,7 @@ for j = 1:length(ISI_values)
     line([ISI_values(j) ISI_values(j)], [k-1 k]);
 end 
 xlabel('Time (sec)'); ylabel('Trial no'); 
+set(figure(2), 'Visible', 'On');
   
 figure(3 + k_figure);
 subplot(k_rows, k_rows, k_spot);
@@ -128,6 +130,7 @@ hist(lnISI, 50);
 xlabel('10\^');
 ylabel('Number of Occurences');
 title({filename});
+set(figure(3 + k_figure), 'Visible', 'On');
 
 buckets = 250;
 lags = 25000;
@@ -148,5 +151,6 @@ figure(4 + k_figure);
 subplot(k_rows,k_rows,k_spot);
 bar(b);
 title([file 'Autocorr']);
+set(figure(4 + k_figure), 'Visible', 'On');
 
 end
