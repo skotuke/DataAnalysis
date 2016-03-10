@@ -6,7 +6,7 @@ imginfo = imfinfo(file);
 
 resolution = 1 / imginfo.XResolution;
 stem_sensitivity = 0.7; % higher is more sensitive, must be under 1.
-brightness = 0.22; 
+brightness = 0.20; 
 
 imgbw = im2bw(img, brightness);
 figure(1);

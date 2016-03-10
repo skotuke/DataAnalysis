@@ -60,7 +60,7 @@ ylabel('Voltage(mV)');
 title(file);
 set(figure(1 + k_figure), 'Visible', 'On');
  
-thresh_AP = -20; %what threshold voltage needs to pass to be considered as firing an AP
+thresh_AP = -30; %what threshold voltage needs to pass to be considered as firing an AP
 
 AP_times = zeros(10000, 1);
 AP_times_shifted = zeros(10000, 1);
@@ -123,14 +123,14 @@ end
 xlabel('Time (sec)'); ylabel('Trial no'); 
 set(figure(2), 'Visible', 'On');
   
-figure(3 + k_figure);
-subplot(k_rows, k_rows, k_spot);
-lnISI = log10(ISI_values);
-hist(lnISI, 50);
-xlabel('10\^');
-ylabel('Number of Occurences');
-title({filename});
-set(figure(3 + k_figure), 'Visible', 'On');
+%figure(3 + k_figure);
+%subplot(k_rows, k_rows, k_spot);
+%lnISI = log10(ISI_values);
+%hist(lnISI, 50);
+%xlabel('10\^');
+%ylabel('Number of Occurences');
+%title({filename});
+%set(figure(3 + k_figure), 'Visible', 'On');
 
 buckets = 250;
 lags = 25000;
@@ -147,10 +147,10 @@ for i = 0:(buckets-1)
     b(i+1) = mean(a((i*bucketsize+1):((i+1)*bucketsize),1));
 end
 
-figure(4 + k_figure);
-subplot(k_rows,k_rows,k_spot);
-bar(b);
-title([file 'Autocorr']);
-set(figure(4 + k_figure), 'Visible', 'On');
+%figure(4 + k_figure);
+%subplot(k_rows,k_rows,k_spot);
+%bar(b);
+%title([file 'Autocorr']);
+%set(figure(4 + k_figure), 'Visible', 'On');
 
 end
