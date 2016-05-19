@@ -30,9 +30,9 @@ for i = 1:number_of_files
 
     data = reshape(data, duration * sweeps, 1);
     
-    figure(99);
-    plot(data(1:duration*sweeps, 1));
-    title(filenames(i));
+    %figure(99);
+    %plot(data(1:duration*sweeps, 1));
+    %title(filenames(i));
   
     filter = 10000;
     
@@ -54,28 +54,40 @@ for i = 1:number_of_files
     end
         
    if filter == 0
-        close 99;
+        %close 99;
         continue;
     end
         
-       
+      if total_length==100 
        startts = 0;
-       endts = total_length;
+       endts = 10;
        fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-       [ISI_values, AP_actual_sizes, AP_times_number]=Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
-        m = m + 1;
+       [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_10s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
+       m = m + 1;
+      end
+
+       if total_length==300
+
+           startts = 100; 
+           endts = 110;  
+           fullname = sprintf('%s %d:%d', name{1}, startts, endts);
+           [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_10s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
+           m = m + 1;
+       end
        
+     
+       if total_length==300|total_length>300
+           startts = 290; 
+           endts = 300;  
+           fullname = sprintf('%s %d:%d', name{1}, startts, endts);
+           [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_10s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
+           m = m + 1;
+       end
         
-        if part==2;
-            startts = 200; 
-            endts = total_length;  
-            fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-            [ISI_values, AP_actual_sizes, AP_times_number]=Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
-             m = m + 1;
-        end
-         
+
+             
     
-    close 99;
+    %close 99;
 end
 
 
