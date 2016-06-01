@@ -51,8 +51,9 @@ for i = 1:number_of_files
       if total_length==100 
        startts = 50;
        endts = 100;
+       duration=(endts-startts)*filter;
        fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-       [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_50s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
+       [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_50s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i), duration );
        m = m + 1;
       end
                  

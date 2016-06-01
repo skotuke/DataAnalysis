@@ -1,4 +1,4 @@
-function [ISI_values, AP_actual_sizes, AP_times_number] = Analysis_100s(data, sweep, k, k_total, filter, filename, output_folder, location, name, file) 
+function [ISI_values, AP_actual_sizes, AP_times_number] = Analysis_100s(data, sweep, k, k_total, filter, filename, output_folder, location, name, file, duration) 
 % Function Analysis
 
 % after '=' is the name of the funtion and in brackets there is a list of
@@ -47,7 +47,7 @@ while k_spot > k_rows * k_rows %jeigu jau nebetelpa,pradeti numeruoti is naujo. 
     k_figure = k_figure + 10;
 end
 
-duration = 100000;
+duration = 1000000;
 duration_s = (1/filter):(1/filter):(duration/filter);%zero does not exist in matlab, therefore it starts at the smallest point.
 %1/filter pirmasis element in the graph or matrix, 1/filter step size, and duration/filter paskutinis elemnet in the graph/matrix 
 sweep_data = data(1:duration, 1, sweep); % sweep is an argument

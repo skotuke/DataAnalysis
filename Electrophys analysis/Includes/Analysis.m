@@ -52,13 +52,13 @@ duration_s = (1/filter):(1/filter):(duration/filter);%zero does not exist in mat
 %1/filter pirmasis element in the graph or matrix, 1/filter step size, and duration/filter paskutinis elemnet in the graph/matrix 
 sweep_data = data(1:duration, 1, sweep); % sweep is an argument
 
-figure(1 + k_figure);
-subplot(k_rows, k_rows, k_spot);
-plot(duration_s, sweep_data);
-xlabel('Time (sec)');
-ylabel('Voltage(mV)');
-title(file);
-set(figure(1 + k_figure), 'Visible', 'On');
+%figure(1 + k_figure);
+%subplot(k_rows, k_rows, k_spot);
+%plot(duration_s, sweep_data);
+%xlabel('Time (sec)');
+%ylabel('Voltage(mV)');
+%title(file);
+%set(figure(1 + k_figure), 'Visible', 'On');
  
 thresh_AP = -30; %what threshold voltage needs to pass to be considered as firing an AP
 

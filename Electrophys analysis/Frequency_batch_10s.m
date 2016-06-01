@@ -61,17 +61,19 @@ for i = 1:number_of_files
       if total_length==100 
        startts = 0;
        endts = 10;
+       duration=(endts-startts)*filter;
        fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-       [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_10s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
+       [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_10s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i), duration );
        m = m + 1;
       end
 
        if total_length==300
 
            startts = 100; 
-           endts = 110;  
+           endts = 110;
+           duration=(endts-startts)*filter;
            fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-           [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_10s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
+           [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_10s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i), duration );
            m = m + 1;
        end
        
@@ -79,8 +81,9 @@ for i = 1:number_of_files
        if total_length==300|total_length>300
            startts = 290; 
            endts = 300;  
+           duration=(endts-startts)*filter;
            fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-           [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_10s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
+           [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_10s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i), duration );
            m = m + 1;
        end
         

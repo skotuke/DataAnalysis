@@ -30,40 +30,41 @@ for i = 1:number_of_files
 
     data = reshape(data, duration * sweeps, 1);
     
-    %figure(99);
-    %plot(data(1:duration*sweeps, 1));
-    %title(filenames(i));
-  
-    filter = 10000;
+    figure(99);
+    plot(data(1:duration*sweeps, 1));
+    title(filenames(i));
+   
     
+   
+    filter=10000;
     
-    total_length = floor(duration * sweeps / filter);
-
-    if total_length>300
-            total_length=300;
-    end
-    
-    if total_length<200
+    if duration<100
         filter=0;
     end
-        
-   if filter == 0
-        %close 99;
+
+    
+    
+    if filter == 0
+        close 99;
         continue;
     end
-        
-           startts = 0; 
-           endts = 100;  
-           duration=(endts-startts)*filter;
-           fullname = sprintf('%s %d:%d', name{1}, startts, endts);
-           [ISI_values, AP_actual_sizes, AP_times_number]=Analysis_100s(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i), duration );
-           m = m + 1;
-           
-            
-
-             
     
-    %close 99;
+   
+    total_length = floor(duration * sweeps / filter);
+    parts=total_length/5;
+    
+    
+    for part=1:parts
+        
+        startts = part*5-5;
+        endts = part*5;
+        
+        fullname = sprintf('%s %d:%d', name{1}, startts, endts);
+        [ISI_values, AP_actual_sizes, AP_times_number]=Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Frequency',path, filenames{1}, filenames(i) );
+        m = m + 1;
+    end
+    
+    close 99;
 end
 
 
