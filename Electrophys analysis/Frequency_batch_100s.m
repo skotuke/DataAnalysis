@@ -1,4 +1,4 @@
-close all;
+  close all;
 
 path = fileparts(mfilename('fullpath')); %mfilename takes the whole path, fileparts splits the name (firing single or joint) from the rest of the path
 delete(sprintf('%s/Output/Frequency/*.xlsx', path));

@@ -15,8 +15,9 @@ for j=1:length(ISI_values)
         burst_gaps(burst_number)=ISI_values(j);
         burst_gap_IDs(burst_number)=j;
     end
-end   
+end
 
+       
 burst_lengths=zeros(1000,1);
 burst_AP_counts=zeros(1000,1);
 true_burst_number=0;

@@ -69,7 +69,13 @@ for i = 1:number_of_files
         fullname = sprintf('%s %d:%d', name{1}, startts, endts);
         [ISI_values, AP_actual_sizes, AP_times_number] = Analysis(data((startts * filter + 1):(endts * filter)), 1, m, 9, filter, fullname, 'Burst_Analysis', path, filenames{1},filenames(i));
         
-        ISI_thresh_log = input('What determines interburst period? ');
+        figure(3);
+        lnISI = log10(ISI_values);
+        hist(lnISI, 50);
+        xlabel('10\^');
+        ylabel('Number of Occurences');
+        
+ISI_thresh_log = input('What determines interburst period? ');
         ISI_thresh = 10 ^ ISI_thresh_log;
 
         Burst_Analysis(ISI_values, AP_actual_sizes, ISI_thresh, fullname, m, path);
